@@ -53,18 +53,13 @@ jobs:
       # 构建 API 文档
       - name: Build docs with Redocly
         run: |          
-          redocly build-docs openapi.yaml \
-            --version ${{ env.API_VERSION }} \
-            --output ${DOC_OUTPUT_DIR}/index.html \
-            --title "CertVault API Documentation" \
-            --theme default \
-            --no-server
+          redocly build-docs -o index.html
 
       # 部署到 GitHub Pages
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./${DOC_OUTPUT_DIR}
+          publish_dir: ./index.html
           commit_message: "Update API docs"
           enable_jekyll: false
