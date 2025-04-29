@@ -44,7 +44,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: lts/Jod
-          cache: npm
+          cache: false 
 
       # 安装 Redocly CLI
       - name: Install Redocly CLI
@@ -69,10 +69,3 @@ jobs:
           publish_dir: ./${DOC_OUTPUT_DIR}
           commit_message: "Update API docs"
           enable_jekyll: false
-      
-      - name: Cache Redocly
-        uses: actions/cache@v3
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          keep_files: true
