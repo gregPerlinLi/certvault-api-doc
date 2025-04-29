@@ -25,6 +25,19 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # 安装 yq YAML 处理工具
+      - name: Install yq
+        run: |          
+          sudo wget https://github.com/mikefarah/yq/releases/download/v4.44.3/yq_linux_amd64 -O /usr/local/bin/yq
+          sudo chmod +x /usr/local/bin/yq
+
+      # 提取 OpenAPI 版本号
+      - name: Extract API Version
+        id: version
+        run: |          
+          VERSION=$(yq e '.info.version' openapi.yaml | sed 's/^v//')
+          echo "API_VERSION=$VERSION" >> $GITHUB_ENV
+
       # 设置 Node.js 环境
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -41,6 +54,7 @@ jobs:
       - name: Build docs with Redocly
         run: |          
           redocly build-docs openapi.yaml \
+            --version ${{ env.API_VERSION }} \
             --output ${DOC_OUTPUT_DIR}/index.html \
             --title "CertVault API Documentation" \
             --theme default \
@@ -54,3 +68,10 @@ jobs:
           publish_dir: ./${DOC_OUTPUT_DIR}
           commit_message: ${{ github.event.head_commit.message || "Update API docs" }}
           enable_jekyll: false
+      
+      - name: Cache Redocly
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          keep_files: true
