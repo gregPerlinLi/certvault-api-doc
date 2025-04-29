@@ -44,7 +44,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: lts/Jod
-          cache: false 
 
       # 安装 Redocly CLI
       - name: Install Redocly CLI
