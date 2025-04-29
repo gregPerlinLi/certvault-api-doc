@@ -67,7 +67,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./${DOC_OUTPUT_DIR}
-          commit_message: ${{ github.event.head_commit.message || "Update API docs" }}
+          commit_message: "Update API docs"
           enable_jekyll: false
       
       - name: Cache Redocly
