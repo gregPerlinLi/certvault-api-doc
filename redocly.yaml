@@ -1,6 +1,0 @@
-extends:
-  - all
-
-apis:
-  default@v1:
-    root: ./openapi.yaml
