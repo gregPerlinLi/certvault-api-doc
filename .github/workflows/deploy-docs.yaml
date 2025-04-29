@@ -1,0 +1,56 @@
+name: Redocly API Docs Deployment
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+env:
+  REDOCLY_VERSION: 1.x
+  DOC_OUTPUT_DIR: dist
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+
+    steps:
+      # 检出代码
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 设置 Node.js 环境
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/Jod
+          cache: npm
+
+      # 安装 Redocly CLI
+      - name: Install Redocly CLI
+        run: |          
+          npm install -g @redocly/cli@${REDOCLY_VERSION}
+
+      # 构建 API 文档
+      - name: Build docs with Redocly
+        run: |          
+          redocly build-docs openapi.yaml \
+            --output ${DOC_OUTPUT_DIR}/index.html \
+            --title "CertVault API Documentation" \
+            --theme default \
+            --no-server
+
+      # 部署到 GitHub Pages
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./${DOC_OUTPUT_DIR}
+          commit_message: ${{ github.event.head_commit.message || "Update API docs" }}
+          enable_jekyll: false
