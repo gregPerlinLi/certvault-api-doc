@@ -7,7 +7,8 @@ on:
   pull_request:
     branches:
       - main
-
+  workflow_dispatch:
+  
 env:
   REDOCLY_VERSION: 1.x
   DOC_OUTPUT_DIR: dist
