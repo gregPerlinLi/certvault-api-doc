@@ -9,7 +9,7 @@ info:
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0
-  version: 2.3.3
+  version: 2.3.4
   summary: CertVault RESTful API Doc
   x-logo:
     url: https://raw.githubusercontent.com/gregPerlinLi/CertVault/refs/heads/main/docs/img/Logo.svg
@@ -56,48 +56,69 @@ paths:
               expiry: 365
         required: true
       responses:
-        "403":
-          description: Not Your Resource
-          content:
-            application/json:
-              example:
-                code: 403
-                msg: The resource is not yours.
-                data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
-        "404":
-          description: No Static Resource
-          content:
-            application/json:
-              example:
-                code: 404
-                msg: The xxx does not exist.
-                data: null
-                timestamp: 2025-04-04T15:56:39.159625764+08:00
         "200":
           description: Request Success
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ResultVOResponse Certificate DTO"
+                $ref: "#/components/schemas/CertResponseResult"
+              example:
+                code: 200
+                message: Success
+                data:
+                  uuid: 2f2d63a8-b29c-4404-ae10-81f5ff023a69
+                  algorithm: RSA
+                  keySize: 2048
+                  privkey: null
+                  cert: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk...
+                  caUuid: 3885be11-4084-4538-9fa0-70ffe4c4cbe0
+                  notBefore: 2025-03-22T23:05:54.773
+                  notAfter: 2035-03-20T23:05:54.773
+                  comment: CertVault Website SSL Certificate
+        "403":
+          description: Not Your Resource
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
+              example:
+                code: 403
+                msg: The resource is not yours.
+                data: null
+                timestamp: 2025-04-04T16:16:02+08:00
+        "404":
+          description: No Static Resource
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
+              example:
+                code: 404
+                msg: The xxx does not exist.
+                data: null
+                timestamp: 2025-04-04T15:56:39+08:00
         "444":
           description: Request Failed
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 444
                 msg: Failed
                 data: null
-                timestamp: 2025-04-04T09:45:34.622698063+08:00
+                timestamp: 2025-04-04T09:45:34+08:00
         "401":
           description: No valid session found.
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 401
                 msg: No valid session found.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
     delete:
       tags:
       - User
@@ -113,48 +134,61 @@ paths:
           type: string
         example: 3885be11-4084-4538-9fa0-70ffe4c4cbe0
       responses:
+        "403":
+          description: Not Your Resource
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
+              example:
+                code: 403
+                msg: The resource is not yours.
+                data: null
+                timestamp: 2025-04-04T16:16:02+08:00
+        "404":
+          description: No Static Resource
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
+              example:
+                code: 404
+                msg: The xxx does not exist.
+                data: null
+                timestamp: 2025-04-04T15:56:39+08:00
         "200":
           description: Request Success
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ResultVOVoid"
+                $ref: "#/components/schemas/NullResult"
+              example:
+                code: 200
+                msg: Success
+                data: null
+                timestamp: 2025-04-04T16:16:02+08:00
         "444":
           description: Request Failed
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 444
                 msg: Failed
                 data: null
-                timestamp: 2025-04-04T09:45:34.622698063+08:00
-        "403":
-          description: Not Your Resource
-          content:
-            application/json:
-              example:
-                code: 403
-                msg: The resource is not yours.
-                data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
-        "404":
-          description: No Static Resource
-          content:
-            application/json:
-              example:
-                code: 404
-                msg: The xxx does not exist.
-                data: null
-                timestamp: 2025-04-04T15:56:39.159625764+08:00
+                timestamp: 2025-04-04T09:45:34+08:00
         "401":
           description: No valid session found.
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 401
                 msg: No valid session found.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
   /api/v1/admin/cert/ca/{uuid}:
     put:
       tags:
@@ -184,11 +218,15 @@ paths:
           description: Renew CA certificate successfully
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/CertResponseResult"
               example:
                 code: 200
                 msg: Success
                 data:
                   uuid: bf35ecb1-9b67-4083-9476-e264ba153188
+                  algorithm: RSA
+                  keySize: 2048
                   privkey: null
                   cert: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUV2QUl...
                   parentCa: 3885be11-4084-4538-9fa0-70ffe4c4cbe0
@@ -201,38 +239,46 @@ paths:
           description: Insufficient privileges
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 403
                 msg: Insufficient privileges.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
         "404":
           description: No Static Resource
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 404
                 msg: The xxx does not exist.
                 data: null
-                timestamp: 2025-04-04T15:56:39.159625764+08:00
+                timestamp: 2025-04-04T15:56:39+08:00
         "444":
           description: Request Failed
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 444
                 msg: Failed
                 data: null
-                timestamp: 2025-04-04T09:45:34.622698063+08:00
+                timestamp: 2025-04-04T09:45:34+08:00
         "401":
           description: No valid session found.
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 401
                 msg: No valid session found.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
     delete:
       tags:
       - Admin
@@ -252,44 +298,57 @@ paths:
           description: Insufficient privileges
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 403
                 msg: Insufficient privileges.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
         "404":
           description: No Static Resource
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 404
                 msg: The xxx does not exist.
                 data: null
-                timestamp: 2025-04-04T15:56:39.159625764+08:00
+                timestamp: 2025-04-04T15:56:39+08:00
         "200":
           description: Request Success
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ResultVOVoid"
+                $ref: "#/components/schemas/NullResult"
+              example:
+                code: 200
+                msg: Success
+                data: null
+                timestamp: 2025-04-04T16:16:02+08:00
         "444":
           description: Request Failed
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 444
                 msg: Failed
                 data: null
-                timestamp: 2025-04-04T09:45:34.622698063+08:00
+                timestamp: 2025-04-04T09:45:34+08:00
         "401":
           description: No valid session found.
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 401
                 msg: No valid session found.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
   /api/v1/user/cert/ssl:
     get:
       tags:
@@ -343,22 +402,26 @@ paths:
           description: No Static Resource
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 404
                 msg: The xxx does not exist.
                 data: null
-                timestamp: 2025-04-04T15:56:39.159625764+08:00
+                timestamp: 2025-04-04T15:56:39+08:00
         "204":
           description: No Data
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullPageResult"
               example:
                 code: 204
                 msg: No data
                 data:
                   total: 0
                   list: null
-                timestamp: 2025-04-04T15:46:18.96845051+08:00
+                timestamp: 2025-04-04T15:46:18+08:00
         "200":
           description: Request Success
           content:
@@ -369,11 +432,13 @@ paths:
           description: No valid session found.
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 401
                 msg: No valid session found.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
     post:
       tags:
       - User
@@ -392,50 +457,65 @@ paths:
           description: Success
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/CertResponseResult"
               example:
-                uuid: 2f2d63a8-b29c-4404-ae10-81f5ff023a69
-                privkey: null
-                cert: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk...
-                caUuid: 3885be11-4084-4538-9fa0-70ffe4c4cbe0
-                notBefore: 2025-03-22T23:05:54.773
-                notAfter: 2035-03-20T23:05:54.773
-                comment: CertVault Website SSL Certificate
+                code: 200
+                message: Success
+                data:
+                  uuid: 2f2d63a8-b29c-4404-ae10-81f5ff023a69
+                  algorithm: RSA
+                  keySize: 2048
+                  privkey: LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JSUV2Z0lCQU...
+                  cert: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk...
+                  caUuid: 3885be11-4084-4538-9fa0-70ffe4c4cbe0
+                  notBefore: 2025-03-22T23:05:54.773
+                  notAfter: 2035-03-20T23:05:54.773
+                  comment: CertVault Website SSL Certificate
         "403":
           description: Not Your Resource
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 403
                 msg: The resource is not yours.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
         "404":
           description: No Static Resource
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 404
                 msg: The xxx does not exist.
                 data: null
-                timestamp: 2025-04-04T15:56:39.159625764+08:00
+                timestamp: 2025-04-04T15:56:39+08:00
         "444":
           description: Request Failed
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 444
                 msg: Failed
                 data: null
-                timestamp: 2025-04-04T09:45:34.622698063+08:00
+                timestamp: 2025-04-04T09:45:34+08:00
         "401":
           description: No valid session found.
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 401
                 msg: No valid session found.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
   /api/v1/user/cert/ssl/{uuid}/privkey:
     post:
       tags:
@@ -466,29 +546,35 @@ paths:
           description: Password validation failed
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 403
                 msg: Password validation failed
                 data: null
-                timestamp: 2025-04-04T09:45:34.622698063+08:00
+                timestamp: 2025-04-04T09:45:34+08:00
         "403":
           description: Not Your Resource
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 403
                 msg: The resource is not yours.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
         "404":
           description: No Static Resource
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 404
                 msg: The xxx does not exist.
                 data: null
-                timestamp: 2025-04-04T15:56:39.159625764+08:00
+                timestamp: 2025-04-04T15:56:39+08:00
         "200":
           description: Request Success
           content:
@@ -499,20 +585,24 @@ paths:
           description: No Data
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 204
                 msg: No data
                 data: null
-                timestamp: 2025-04-04T15:46:18.96845051+08:00
+                timestamp: 2025-04-04T15:46:18+08:00
         "401":
           description: No valid session found.
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 401
                 msg: No valid session found.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
   /api/v1/user/cert/privkey/analyze:
     post:
       tags:
@@ -540,11 +630,13 @@ paths:
           description: No valid session found.
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 401
                 msg: No valid session found.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
   /api/v1/user/cert/convert/pem/to/pfx:
     post:
       tags:
@@ -568,11 +660,13 @@ paths:
           description: Parameter Can Not be Null
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 422
                 msg: Parameter cannot be null.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
         "200":
           description: Request Success
           content:
@@ -583,11 +677,13 @@ paths:
           description: No valid session found.
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 401
                 msg: No valid session found.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
   /api/v1/user/cert/convert/pem/to/der:
     post:
       tags:
@@ -607,11 +703,13 @@ paths:
           description: Parameter Can Not be Null
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 422
                 msg: Parameter cannot be null.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
         "200":
           description: Request Success
           content:
@@ -622,11 +720,13 @@ paths:
           description: No valid session found.
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 401
                 msg: No valid session found.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
   /api/v1/user/cert/convert/der/to/pem:
     post:
       tags:
@@ -646,11 +746,13 @@ paths:
           description: Parameter Can Not be Null
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 422
                 msg: Parameter cannot be null.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
         "200":
           description: Request Success
           content:
@@ -661,11 +763,13 @@ paths:
           description: No valid session found.
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 401
                 msg: No valid session found.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
   /api/v1/user/cert/analyze:
     post:
       tags:
@@ -693,11 +797,13 @@ paths:
           description: No valid session found.
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 401
                 msg: No valid session found.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
   /api/v1/superadmin/users/delete:
     post:
       tags:
@@ -719,53 +825,68 @@ paths:
           description: Insufficient privileges
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 403
                 msg: Insufficient privileges.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
         "404":
           description: No Static Resource
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 404
                 msg: The xxx does not exist.
                 data: null
-                timestamp: 2025-04-04T15:56:39.159625764+08:00
+                timestamp: 2025-04-04T15:56:39+08:00
         "422":
           description: Parameter Can Not be Null
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 422
                 msg: Parameter cannot be null.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
         "200":
           description: Request Success
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ResultVOVoid"
+                $ref: "#/components/schemas/NullResult"
+              example:
+                code: 200
+                msg: Success
+                data: null
+                timestamp: 2025-04-04T16:16:02+08:00
         "444":
           description: Request Failed
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 444
                 msg: Failed
                 data: null
-                timestamp: 2025-04-04T09:45:34.622698063+08:00
+                timestamp: 2025-04-04T09:45:34+08:00
         "401":
           description: No valid session found.
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 401
                 msg: No valid session found.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
   /api/v1/superadmin/users/create:
     post:
       tags:
@@ -787,44 +908,57 @@ paths:
           description: Resource Already Exist
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 422
                 msg: The xxx already exist.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
         "200":
           description: Request Success
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ResultVOVoid"
+                $ref: "#/components/schemas/NullResult"
+              example:
+                code: 200
+                msg: Success
+                data: null
+                timestamp: 2025-04-04T16:16:02+08:00
         "444":
           description: Request Failed
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 444
                 msg: Failed
                 data: null
-                timestamp: 2025-04-04T09:45:34.622698063+08:00
+                timestamp: 2025-04-04T09:45:34+08:00
         "403":
           description: Insufficient privileges
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 403
                 msg: Insufficient privileges.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
         "401":
           description: No valid session found.
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 401
                 msg: No valid session found.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
   /api/v1/superadmin/user:
     post:
       tags:
@@ -844,11 +978,13 @@ paths:
           description: Resource Already Exist
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 422
                 msg: The xxx already exist.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
         "200":
           description: Request Success
           content:
@@ -859,29 +995,35 @@ paths:
           description: Request Failed
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 444
                 msg: Failed
                 data: null
-                timestamp: 2025-04-04T09:45:34.622698063+08:00
+                timestamp: 2025-04-04T09:45:34+08:00
         "403":
           description: Insufficient privileges
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 403
                 msg: Insufficient privileges.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
         "401":
           description: No valid session found.
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 401
                 msg: No valid session found.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
   /api/v1/auth/login:
     post:
       tags:
@@ -901,11 +1043,13 @@ paths:
           description: Login Failed
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 444
                 msg: "Login failed, username or password error"
                 data: null
-                timestamp: 2025-04-04T09:45:34.622698063+08:00
+                timestamp: 2025-04-04T09:45:34+08:00
         "200":
           description: Login Success
           content:
@@ -965,13 +1109,15 @@ paths:
           description: No Data
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullPageResult"
               example:
                 code: 204
                 msg: No data
                 data:
                   total: 0
                   list: null
-                timestamp: 2025-04-04T15:46:18.96845051+08:00
+                timestamp: 2025-04-04T15:46:18+08:00
         "200":
           description: Request Success
           content:
@@ -982,20 +1128,24 @@ paths:
           description: Insufficient privileges
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 403
                 msg: Insufficient privileges.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
         "401":
           description: No valid session found.
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 401
                 msg: No valid session found.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
     post:
       tags:
       - Admin
@@ -1025,20 +1175,24 @@ paths:
           description: Insufficient privileges
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 403
                 msg: Insufficient privileges.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
         "404":
           description: No Static Resource
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 404
                 msg: The xxx does not exist.
                 data: null
-                timestamp: 2025-04-04T15:56:39.159625764+08:00
+                timestamp: 2025-04-04T15:56:39+08:00
         "200":
           description: Request Success
           content:
@@ -1049,20 +1203,24 @@ paths:
           description: Request Failed
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 444
                 msg: Failed
                 data: null
-                timestamp: 2025-04-04T09:45:34.622698063+08:00
+                timestamp: 2025-04-04T09:45:34+08:00
         "401":
           description: No valid session found.
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 401
                 msg: No valid session found.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
   /api/v1/admin/cert/ca/{uuid}/privkey:
     post:
       tags:
@@ -1093,29 +1251,35 @@ paths:
           description: Password validation failed
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 403
                 msg: Password validation failed
                 data: null
-                timestamp: 2025-04-04T09:45:34.622698063+08:00
+                timestamp: 2025-04-04T09:45:34+08:00
         "403":
           description: Insufficient privileges
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 403
                 msg: Insufficient privileges.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
         "404":
           description: No Static Resource
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 404
                 msg: The xxx does not exist.
                 data: null
-                timestamp: 2025-04-04T15:56:39.159625764+08:00
+                timestamp: 2025-04-04T15:56:39+08:00
         "200":
           description: Request Success
           content:
@@ -1126,11 +1290,13 @@ paths:
           description: No valid session found.
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 401
                 msg: No valid session found.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
   /api/v1/admin/cert/ca/import:
     post:
       tags:
@@ -1150,35 +1316,56 @@ paths:
           description: Request Failed
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 444
                 msg: Failed
                 data: null
-                timestamp: 2025-04-04T09:45:34.622698063+08:00
+                timestamp: 2025-04-04T09:45:34+08:00
         "200":
-          description: Request Success
+          description: Success
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ResultVOResponse CA DTO"
+                $ref: "#/components/schemas/CertResponseResult"
+              example:
+                code: 200
+                msg: Success
+                data:
+                  uuid: bf35ecb1-9b67-4083-9476-e264ba153188
+                  algorithm: RSA
+                  keySize: 2048
+                  privkey: null
+                  cert: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUV2QUl...
+                  parentCa: 3885be11-4084-4538-9fa0-70ffe4c4cbe0
+                  allowSubCa: true
+                  notBefore: 2025-03-23T12:49:45.733
+                  notAfter: 2025-09-19T12:49:45.733
+                  comment: Cert Vault Default Intermediate Certificate Authority
+                timestamp: 2025-03-19T01:38:31+08:00
         "403":
           description: Insufficient privileges
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 403
                 msg: Insufficient privileges.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
         "401":
           description: No valid session found.
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 401
                 msg: No valid session found.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
   /api/v1/admin/cert/ca/binds/delete:
     post:
       tags:
@@ -1200,53 +1387,68 @@ paths:
           description: Parameter Can Not be Null
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 422
                 msg: Parameter cannot be null.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
         "404":
           description: No Static Resource
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 404
                 msg: The xxx does not exist.
                 data: null
-                timestamp: 2025-04-04T15:56:39.159625764+08:00
+                timestamp: 2025-04-04T15:56:39+08:00
         "200":
           description: Request Success
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ResultVOVoid"
+                $ref: "#/components/schemas/NullResult"
+              example:
+                code: 200
+                msg: Success
+                data: null
+                timestamp: 2025-04-04T16:16:02+08:00
         "444":
           description: Request Failed
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 444
                 msg: Failed
                 data: null
-                timestamp: 2025-04-04T09:45:34.622698063+08:00
+                timestamp: 2025-04-04T09:45:34+08:00
         "403":
           description: Insufficient privileges
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 403
                 msg: Insufficient privileges.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
         "401":
           description: No valid session found.
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 401
                 msg: No valid session found.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
   /api/v1/admin/cert/ca/binds/create:
     post:
       tags:
@@ -1268,53 +1470,68 @@ paths:
           description: Parameter Can Not be Null
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 422
                 msg: Parameter cannot be null.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
         "404":
           description: No Static Resource
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 404
                 msg: The xxx does not exist.
                 data: null
-                timestamp: 2025-04-04T15:56:39.159625764+08:00
+                timestamp: 2025-04-04T15:56:39+08:00
         "200":
           description: Request Success
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ResultVOVoid"
+                $ref: "#/components/schemas/NullResult"
+              example:
+                code: 200
+                msg: Success
+                data: null
+                timestamp: 2025-04-04T16:16:02+08:00
         "444":
           description: Request Failed
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 444
                 msg: Failed
                 data: null
-                timestamp: 2025-04-04T09:45:34.622698063+08:00
+                timestamp: 2025-04-04T09:45:34+08:00
         "403":
           description: Insufficient privileges
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 403
                 msg: Insufficient privileges.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
         "401":
           description: No valid session found.
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 401
                 msg: No valid session found.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
   /api/v1/admin/cert/ca/bind/delete:
     post:
       tags:
@@ -1334,44 +1551,57 @@ paths:
           description: No Static Resource
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 404
                 msg: The xxx does not exist.
                 data: null
-                timestamp: 2025-04-04T15:56:39.159625764+08:00
+                timestamp: 2025-04-04T15:56:39+08:00
         "200":
           description: Request Success
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ResultVOVoid"
+                $ref: "#/components/schemas/NullResult"
+              example:
+                code: 200
+                msg: Success
+                data: null
+                timestamp: 2025-04-04T16:16:02+08:00
         "444":
           description: Request Failed
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 444
                 msg: Failed
                 data: null
-                timestamp: 2025-04-04T09:45:34.622698063+08:00
+                timestamp: 2025-04-04T09:45:34+08:00
         "403":
           description: Insufficient privileges
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 403
                 msg: Insufficient privileges.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
         "401":
           description: No valid session found.
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 401
                 msg: No valid session found.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
   /api/v1/admin/cert/ca/bind/create:
     post:
       tags:
@@ -1391,44 +1621,57 @@ paths:
           description: No Static Resource
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 404
                 msg: The xxx does not exist.
                 data: null
-                timestamp: 2025-04-04T15:56:39.159625764+08:00
+                timestamp: 2025-04-04T15:56:39+08:00
         "200":
           description: Request Success
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ResultVOVoid"
+                $ref: "#/components/schemas/NullResult"
+              example:
+                code: 200
+                msg: Success
+                data: null
+                timestamp: 2025-04-04T16:16:02+08:00
         "444":
           description: Request Failed
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 444
                 msg: Failed
                 data: null
-                timestamp: 2025-04-04T09:45:34.622698063+08:00
+                timestamp: 2025-04-04T09:45:34+08:00
         "403":
           description: Insufficient privileges
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 403
                 msg: Insufficient privileges.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
         "401":
           description: No valid session found.
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 401
                 msg: No valid session found.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
   /api/v1/user/profile:
     get:
       tags:
@@ -1441,20 +1684,24 @@ paths:
           description: Parameter Can Not be Null
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 422
                 msg: Parameter cannot be null.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
         "404":
           description: No Static Resource
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 404
                 msg: The xxx does not exist.
                 data: null
-                timestamp: 2025-04-04T15:56:39.159625764+08:00
+                timestamp: 2025-04-04T15:56:39+08:00
         "200":
           description: Request Success
           content:
@@ -1465,11 +1712,13 @@ paths:
           description: No valid session found.
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 401
                 msg: No valid session found.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
     patch:
       tags:
       - User
@@ -1487,47 +1736,60 @@ paths:
         required: true
       responses:
         "422":
-          description: Success
+          description: Password validation failed
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 422
                 msg: The old password is incorrect.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
         "404":
           description: No Static Resource
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 404
                 msg: The xxx does not exist.
                 data: null
-                timestamp: 2025-04-04T15:56:39.159625764+08:00
+                timestamp: 2025-04-04T15:56:39+08:00
         "200":
           description: Request Success
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ResultVOVoid"
+                $ref: "#/components/schemas/NullResult"
+              example:
+                code: 200
+                msg: Success
+                data: null
+                timestamp: 2025-04-04T16:16:02+08:00
         "444":
           description: Request Failed
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 444
                 msg: Failed
                 data: null
-                timestamp: 2025-04-04T09:45:34.622698063+08:00
+                timestamp: 2025-04-04T09:45:34+08:00
         "401":
           description: No valid session found.
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 401
                 msg: No valid session found.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
   /api/v1/user/cert/ssl/{uuid}/comment:
     patch:
       tags:
@@ -1557,44 +1819,57 @@ paths:
           description: Not Your Resource
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 403
                 msg: The resource is not yours.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
         "404":
           description: No Static Resource
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 404
                 msg: The xxx does not exist.
                 data: null
-                timestamp: 2025-04-04T15:56:39.159625764+08:00
+                timestamp: 2025-04-04T15:56:39+08:00
         "200":
           description: Request Success
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ResultVOVoid"
+                $ref: "#/components/schemas/NullResult"
+              example:
+                code: 200
+                msg: Success
+                data: null
+                timestamp: 2025-04-04T16:16:02+08:00
         "444":
           description: Request Failed
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 444
                 msg: Failed
                 data: null
-                timestamp: 2025-04-04T09:45:34.622698063+08:00
+                timestamp: 2025-04-04T09:45:34+08:00
         "401":
           description: No valid session found.
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 401
                 msg: No valid session found.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
   /api/v1/superadmin/users/role:
     patch:
       tags:
@@ -1616,53 +1891,68 @@ paths:
           description: Insufficient privileges
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 403
                 msg: Insufficient privileges.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
         "404":
           description: No Static Resource
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 404
                 msg: The xxx does not exist.
                 data: null
-                timestamp: 2025-04-04T15:56:39.159625764+08:00
+                timestamp: 2025-04-04T15:56:39+08:00
         "422":
           description: Parameter Can Not be Null
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 422
                 msg: Parameter cannot be null.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
         "200":
           description: Request Success
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ResultVOVoid"
+                $ref: "#/components/schemas/NullResult"
+              example:
+                code: 200
+                msg: Success
+                data: null
+                timestamp: 2025-04-04T16:16:02+08:00
         "444":
           description: Request Failed
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 444
                 msg: Failed
                 data: null
-                timestamp: 2025-04-04T09:45:34.622698063+08:00
+                timestamp: 2025-04-04T09:45:34+08:00
         "401":
           description: No valid session found.
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 401
                 msg: No valid session found.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
   /api/v1/superadmin/user/{username}:
     delete:
       tags:
@@ -1683,53 +1973,68 @@ paths:
           description: Insufficient privileges
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 403
                 msg: Insufficient privileges.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
         "404":
           description: No Static Resource
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 404
                 msg: The xxx does not exist.
                 data: null
-                timestamp: 2025-04-04T15:56:39.159625764+08:00
+                timestamp: 2025-04-04T15:56:39+08:00
         "422":
           description: Parameter Can Not be Null
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 422
                 msg: Parameter cannot be null.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
         "200":
           description: Request Success
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ResultVOVoid"
+                $ref: "#/components/schemas/NullResult"
+              example:
+                code: 200
+                msg: Success
+                data: null
+                timestamp: 2025-04-04T16:16:02+08:00
         "444":
           description: Request Failed
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 444
                 msg: Failed
                 data: null
-                timestamp: 2025-04-04T09:45:34.622698063+08:00
+                timestamp: 2025-04-04T09:45:34+08:00
         "401":
           description: No valid session found.
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 401
                 msg: No valid session found.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
     patch:
       tags:
       - Superadmin
@@ -1756,44 +2061,57 @@ paths:
           description: No Static Resource
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 404
                 msg: The xxx does not exist.
                 data: null
-                timestamp: 2025-04-04T15:56:39.159625764+08:00
+                timestamp: 2025-04-04T15:56:39+08:00
         "200":
           description: Request Success
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ResultVOVoid"
+                $ref: "#/components/schemas/NullResult"
+              example:
+                code: 200
+                msg: Success
+                data: null
+                timestamp: 2025-04-04T16:16:02+08:00
         "444":
           description: Request Failed
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 444
                 msg: Failed
                 data: null
-                timestamp: 2025-04-04T09:45:34.622698063+08:00
+                timestamp: 2025-04-04T09:45:34+08:00
         "403":
           description: Insufficient privileges
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 403
                 msg: Insufficient privileges.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
         "401":
           description: No valid session found.
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 401
                 msg: No valid session found.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
   /api/v1/superadmin/user/role:
     patch:
       tags:
@@ -1813,53 +2131,68 @@ paths:
           description: Insufficient privileges
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 403
                 msg: Insufficient privileges.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
         "404":
           description: No Static Resource
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 404
                 msg: The xxx does not exist.
                 data: null
-                timestamp: 2025-04-04T15:56:39.159625764+08:00
+                timestamp: 2025-04-04T15:56:39+08:00
         "422":
           description: Parameter Can Not be Null
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 422
                 msg: Parameter cannot be null.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
         "200":
           description: Request Success
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ResultVOVoid"
+                $ref: "#/components/schemas/NullResult"
+              example:
+                code: 200
+                msg: Success
+                data: null
+                timestamp: 2025-04-04T16:16:02+08:00
         "444":
           description: Request Failed
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 444
                 msg: Failed
                 data: null
-                timestamp: 2025-04-04T09:45:34.622698063+08:00
+                timestamp: 2025-04-04T09:45:34+08:00
         "401":
           description: No valid session found.
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 401
                 msg: No valid session found.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
   /api/v1/admin/cert/ca/{uuid}/comment:
     patch:
       tags:
@@ -1889,44 +2222,57 @@ paths:
           description: Insufficient privileges
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 403
                 msg: Insufficient privileges.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
         "404":
           description: No Static Resource
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 404
                 msg: The xxx does not exist.
                 data: null
-                timestamp: 2025-04-04T15:56:39.159625764+08:00
+                timestamp: 2025-04-04T15:56:39+08:00
         "200":
           description: Request Success
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ResultVOVoid"
+                $ref: "#/components/schemas/NullResult"
+              example:
+                code: 200
+                msg: Success
+                data: null
+                timestamp: 2025-04-04T16:16:02+08:00
         "444":
           description: Request Failed
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 444
                 msg: Failed
                 data: null
-                timestamp: 2025-04-04T09:45:34.622698063+08:00
+                timestamp: 2025-04-04T09:45:34+08:00
         "401":
           description: No valid session found.
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 401
                 msg: No valid session found.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
   /api/v1/admin/cert/ca/{uuid}/available:
     patch:
       tags:
@@ -1947,20 +2293,24 @@ paths:
           description: Insufficient privileges
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 403
                 msg: Insufficient privileges.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
         "404":
           description: No Static Resource
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 404
                 msg: The xxx does not exist.
                 data: null
-                timestamp: 2025-04-04T15:56:39.159625764+08:00
+                timestamp: 2025-04-04T15:56:39+08:00
         "200":
           description: Request Success
           content:
@@ -1971,11 +2321,13 @@ paths:
           description: No valid session found.
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 401
                 msg: No valid session found.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
   /api/v1/user/session:
     get:
       tags:
@@ -2031,22 +2383,26 @@ paths:
           description: No Static Resource
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 404
                 msg: The xxx does not exist.
                 data: null
-                timestamp: 2025-04-04T15:56:39.159625764+08:00
+                timestamp: 2025-04-04T15:56:39+08:00
         "204":
           description: No Data
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullPageResult"
               example:
                 code: 204
                 msg: No data
                 data:
                   total: 0
                   list: null
-                timestamp: 2025-04-04T15:46:18.96845051+08:00
+                timestamp: 2025-04-04T15:46:18+08:00
         "200":
           description: Request Success
           content:
@@ -2057,11 +2413,13 @@ paths:
           description: No valid session found.
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 401
                 msg: No valid session found.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
   /api/v1/user/cert/ssl/{uuid}/cer:
     get:
       tags:
@@ -2098,20 +2456,24 @@ paths:
           description: Not Your Resource
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 403
                 msg: The resource is not yours.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
         "404":
           description: No Static Resource
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 404
                 msg: The xxx does not exist.
                 data: null
-                timestamp: 2025-04-04T15:56:39.159625764+08:00
+                timestamp: 2025-04-04T15:56:39+08:00
         "200":
           description: Request Success
           content:
@@ -2122,20 +2484,24 @@ paths:
           description: No Data
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 204
                 msg: No data
                 data: null
-                timestamp: 2025-04-04T15:46:18.96845051+08:00
+                timestamp: 2025-04-04T15:46:18+08:00
         "401":
           description: No valid session found.
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 401
                 msg: No valid session found.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
   /api/v1/user/cert/ssl/count:
     get:
       tags:
@@ -2154,11 +2520,13 @@ paths:
           description: No valid session found.
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 401
                 msg: No valid session found.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
   /api/v1/user/cert/ca:
     get:
       tags:
@@ -2212,22 +2580,26 @@ paths:
           description: No Static Resource
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 404
                 msg: The xxx does not exist.
                 data: null
-                timestamp: 2025-04-04T15:56:39.159625764+08:00
+                timestamp: 2025-04-04T15:56:39+08:00
         "204":
           description: No Data
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullPageResult"
               example:
                 code: 204
                 msg: No data
                 data:
                   total: 0
                   list: null
-                timestamp: 2025-04-04T15:46:18.96845051+08:00
+                timestamp: 2025-04-04T15:46:18+08:00
         "200":
           description: Request Success
           content:
@@ -2238,11 +2610,13 @@ paths:
           description: No valid session found.
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 401
                 msg: No valid session found.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
   /api/v1/user/cert/ca/{uuid}/cer:
     get:
       tags:
@@ -2279,20 +2653,24 @@ paths:
           description: Not Your Resource
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 403
                 msg: The resource is not yours.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
         "404":
           description: No Static Resource
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 404
                 msg: The xxx does not exist.
                 data: null
-                timestamp: 2025-04-04T15:56:39.159625764+08:00
+                timestamp: 2025-04-04T15:56:39+08:00
         "200":
           description: Request Success
           content:
@@ -2303,20 +2681,24 @@ paths:
           description: No Data
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 204
                 msg: No data
                 data: null
-                timestamp: 2025-04-04T15:46:18.96845051+08:00
+                timestamp: 2025-04-04T15:46:18+08:00
         "401":
           description: No valid session found.
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 401
                 msg: No valid session found.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
   /api/v1/user/cert/ca/count:
     get:
       tags:
@@ -2335,11 +2717,13 @@ paths:
           description: No valid session found.
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 401
                 msg: No valid session found.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
   /api/v1/test/bcrypt/{password}:
     get:
       tags:
@@ -2429,13 +2813,15 @@ paths:
           description: No Data
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullPageResult"
               example:
                 code: 204
                 msg: No data
                 data:
                   total: 0
                   list: null
-                timestamp: 2025-04-04T15:46:18.96845051+08:00
+                timestamp: 2025-04-04T15:46:18+08:00
         "200":
           description: Request Success
           content:
@@ -2446,20 +2832,24 @@ paths:
           description: Insufficient privileges
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 403
                 msg: Insufficient privileges.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
         "401":
           description: No valid session found.
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 401
                 msg: No valid session found.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
   /api/v1/superadmin/user/session/{username}:
     get:
       tags:
@@ -2522,13 +2912,15 @@ paths:
           description: No Data
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullPageResult"
               example:
                 code: 204
                 msg: No data
                 data:
                   total: 0
                   list: null
-                timestamp: 2025-04-04T15:46:18.96845051+08:00
+                timestamp: 2025-04-04T15:46:18+08:00
         "200":
           description: Request Success
           content:
@@ -2539,20 +2931,24 @@ paths:
           description: Insufficient privileges
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 403
                 msg: Insufficient privileges.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
         "401":
           description: No valid session found.
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 401
                 msg: No valid session found.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
   /api/v1/superadmin/cert/ssl/count:
     get:
       tags:
@@ -2571,20 +2967,24 @@ paths:
           description: Insufficient privileges
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 403
                 msg: Insufficient privileges.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
         "401":
           description: No valid session found.
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 401
                 msg: No valid session found.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
   /api/v1/superadmin/cert/ca/count:
     get:
       tags:
@@ -2612,20 +3012,24 @@ paths:
           description: Insufficient privileges
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 403
                 msg: Insufficient privileges.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
         "401":
           description: No valid session found.
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 401
                 msg: No valid session found.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
   /api/v1/auth/oauth/provider:
     get:
       tags:
@@ -2638,6 +3042,8 @@ paths:
           description: OIDC Enabled
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/OidcProviderListResult"
               example:
                 code: 200
                 msg: OIDC Enabled
@@ -2650,11 +3056,13 @@ paths:
           description: OIDC Disabled
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 204
                 msg: OIDC Disabled
                 data: null
-                timestamp: 2025-03-29T00:59:00.06971
+                timestamp: 2025-03-29T00:59:00+08:00
   /api/v1/auth/oauth/login:
     get:
       tags:
@@ -2668,6 +3076,8 @@ paths:
           description: Redirect to OIDC Login Page
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 302
                 msg: Redirect to OIDC Login Page
@@ -2677,11 +3087,13 @@ paths:
           description: OIDC Disabled
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 204
                 msg: OIDC Disabled
                 data: null
-                timestamp: 2025-03-29T00:59:00.06971
+                timestamp: 2025-03-29T00:59:00+08:00
   /api/v1/auth/oauth/login/{provider}:
     get:
       tags:
@@ -2701,6 +3113,8 @@ paths:
           description: Redirect to OIDC Login Page
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 302
                 msg: Redirect to OIDC Login Page
@@ -2710,11 +3124,13 @@ paths:
           description: OIDC Disabled
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 204
                 msg: OIDC Disabled
                 data: null
-                timestamp: 2025-03-29T00:59:00.06971
+                timestamp: 2025-03-29T00:59:00+08:00
   /api/v1/auth/oauth/callback:
     get:
       tags:
@@ -2742,6 +3158,8 @@ paths:
           description: Redirect to OIDC Login Page
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/UserProfileResult"
               example:
                 code: 302
                 msg: Redirect to OIDC Login Page
@@ -2755,6 +3173,8 @@ paths:
           description: OIDC User is Null
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 444
                 msg: OIDC User is Null
@@ -2764,11 +3184,13 @@ paths:
           description: OIDC Disabled
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 204
                 msg: OIDC Disabled
                 data: null
-                timestamp: 2025-03-29T00:59:00.06971
+                timestamp: 2025-03-29T00:59:00+08:00
   /api/v1/auth/oauth/callback/{provider}:
     get:
       tags:
@@ -2802,6 +3224,8 @@ paths:
           description: Redirect to OIDC Login Page
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/UserProfileResult"
               example:
                 code: 302
                 msg: Redirect to OIDC Login Page
@@ -2815,6 +3239,8 @@ paths:
           description: OIDC User is Null
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 444
                 msg: OIDC User is Null
@@ -2824,11 +3250,13 @@ paths:
           description: OIDC Disabled
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 204
                 msg: OIDC Disabled
                 data: null
-                timestamp: 2025-03-29T00:59:00.06971
+                timestamp: 2025-03-29T00:59:00+08:00
   /api/v1/admin/users:
     get:
       tags:
@@ -2882,13 +3310,15 @@ paths:
           description: No Data
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullPageResult"
               example:
                 code: 204
                 msg: No data
                 data:
                   total: 0
                   list: null
-                timestamp: 2025-04-04T15:46:18.96845051+08:00
+                timestamp: 2025-04-04T15:46:18+08:00
         "200":
           description: Request Success
           content:
@@ -2899,20 +3329,24 @@ paths:
           description: Insufficient privileges
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 403
                 msg: Insufficient privileges.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
         "401":
           description: No valid session found.
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 401
                 msg: No valid session found.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
   /api/v1/admin/users/count:
     get:
       tags:
@@ -2941,20 +3375,24 @@ paths:
           description: Insufficient privileges
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 403
                 msg: Insufficient privileges.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
         "401":
           description: No valid session found.
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 401
                 msg: No valid session found.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
   /api/v1/admin/cert/ca/{uuid}/count:
     get:
       tags:
@@ -2990,20 +3428,24 @@ paths:
           description: Insufficient privileges
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 403
                 msg: Insufficient privileges.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
         "401":
           description: No valid session found.
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 401
                 msg: No valid session found.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
   /api/v1/admin/cert/ca/{uuid}/cer:
     get:
       tags:
@@ -3040,11 +3482,13 @@ paths:
           description: No Static Resource
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 404
                 msg: The xxx does not exist.
                 data: null
-                timestamp: 2025-04-04T15:56:39.159625764+08:00
+                timestamp: 2025-04-04T15:56:39+08:00
         "200":
           description: Request Success
           content:
@@ -3055,20 +3499,24 @@ paths:
           description: Insufficient privileges
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 403
                 msg: Insufficient privileges.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
         "401":
           description: No valid session found.
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 401
                 msg: No valid session found.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
       deprecated: true
   /api/v1/admin/cert/ca/{uuid}/bind:
     get:
@@ -3130,13 +3578,15 @@ paths:
           description: No Data
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullPageResult"
               example:
                 code: 204
                 msg: No data
                 data:
                   total: 0
                   list: null
-                timestamp: 2025-04-04T15:46:18.96845051+08:00
+                timestamp: 2025-04-04T15:46:18+08:00
         "200":
           description: Request Success
           content:
@@ -3147,20 +3597,24 @@ paths:
           description: Insufficient privileges
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 403
                 msg: Insufficient privileges.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
         "401":
           description: No valid session found.
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 401
                 msg: No valid session found.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
   /api/v1/admin/cert/ca/{uuid}/bind/not:
     get:
       tags:
@@ -3221,13 +3675,15 @@ paths:
           description: No Data
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullPageResult"
               example:
                 code: 204
                 msg: No data
                 data:
                   total: 0
                   list: null
-                timestamp: 2025-04-04T15:46:18.96845051+08:00
+                timestamp: 2025-04-04T15:46:18+08:00
         "200":
           description: Request Success
           content:
@@ -3238,20 +3694,24 @@ paths:
           description: Insufficient privileges
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 403
                 msg: Insufficient privileges.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
         "401":
           description: No valid session found.
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 401
                 msg: No valid session found.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
   /api/v1/admin/cert/ca/count:
     get:
       tags:
@@ -3279,20 +3739,24 @@ paths:
           description: Insufficient privileges
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 403
                 msg: Insufficient privileges.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
         "401":
           description: No valid session found.
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 401
                 msg: No valid session found.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
   /api/v1/user/session/{uuid}/logout:
     delete:
       tags:
@@ -3313,44 +3777,57 @@ paths:
           description: Not Your Resource
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 403
                 msg: The resource is not yours.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
         "404":
           description: No Static Resource
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 404
                 msg: The xxx does not exist.
                 data: null
-                timestamp: 2025-04-04T15:56:39.159625764+08:00
+                timestamp: 2025-04-04T15:56:39+08:00
         "200":
           description: Request Success
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ResultVOVoid"
+                $ref: "#/components/schemas/NullResult"
+              example:
+                code: 200
+                msg: Success
+                data: null
+                timestamp: 2025-04-04T16:16:02+08:00
         "444":
           description: Request Failed
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 444
                 msg: Failed
                 data: null
-                timestamp: 2025-04-04T09:45:34.622698063+08:00
+                timestamp: 2025-04-04T09:45:34+08:00
         "401":
           description: No valid session found.
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 401
                 msg: No valid session found.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
   /api/v1/user/logout:
     delete:
       tags:
@@ -3363,35 +3840,46 @@ paths:
           description: No Static Resource
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 404
                 msg: The xxx does not exist.
                 data: null
-                timestamp: 2025-04-04T15:56:39.159625764+08:00
+                timestamp: 2025-04-04T15:56:39+08:00
         "200":
           description: Request Success
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ResultVOVoid"
+                $ref: "#/components/schemas/NullResult"
+              example:
+                code: 200
+                msg: Success
+                data: null
+                timestamp: 2025-04-04T16:16:02+08:00
         "444":
           description: Request Failed
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 444
                 msg: Failed
                 data: null
-                timestamp: 2025-04-04T09:45:34.622698063+08:00
+                timestamp: 2025-04-04T09:45:34+08:00
         "401":
           description: No valid session found.
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 401
                 msg: No valid session found.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
   /api/v1/superadmin/user/{username}/logout:
     delete:
       tags:
@@ -3411,44 +3899,57 @@ paths:
           description: No Static Resource
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 404
                 msg: The xxx does not exist.
                 data: null
-                timestamp: 2025-04-04T15:56:39.159625764+08:00
+                timestamp: 2025-04-04T15:56:39+08:00
         "200":
           description: Request Success
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ResultVOVoid"
+                $ref: "#/components/schemas/NullResult"
+              example:
+                code: 200
+                msg: Success
+                data: null
+                timestamp: 2025-04-04T16:16:02+08:00
         "444":
           description: Request Failed
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 444
                 msg: Failed
                 data: null
-                timestamp: 2025-04-04T09:45:34.622698063+08:00
+                timestamp: 2025-04-04T09:45:34+08:00
         "403":
           description: Insufficient privileges
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 403
                 msg: Insufficient privileges.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
         "401":
           description: No valid session found.
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 401
                 msg: No valid session found.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
   /api/v1/auth/logout:
     delete:
       tags:
@@ -3461,30 +3962,74 @@ paths:
           description: Logout Failed
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 444
                 msg: "Logout failed, please login first!"
                 data: null
-                timestamp: 2025-04-04T09:45:34.622698063+08:00
+                timestamp: 2025-04-04T09:45:34+08:00
         "200":
           description: Logout Success
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ResultVOVoid"
+                $ref: "#/components/schemas/NullResult"
+              example:
+                code: 200
+                msg: Logout Success
+                data: null
+                timestamp: 2025-04-04T09:45:34+08:00
         "401":
           description: No valid session found.
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/NullResult"
               example:
                 code: 401
                 msg: No valid session found.
                 data: null
-                timestamp: 2025-04-04T16:16:02.5641+08:00
+                timestamp: 2025-04-04T16:16:02+08:00
 components:
   schemas:
-    JsonNode:
+    CertResponseResult:
       type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          description: Message code
+          examples:
+          - "200"
+          - "204"
+          - "302"
+          - "400"
+          - "401"
+          - "403"
+          - "404"
+          - "405"
+          - "417"
+          - "422"
+          - "444"
+          - "500"
+          - "501"
+        msg:
+          type: string
+          description: Return message
+          example: Success
+        data:
+          type: T
+          $ref: "#/components/schemas/Response Certificate DTO"
+          description: Data
+        timestamp:
+          type: string
+          description: Timestamp
+          example: 2025-03-19T01:38:31+08:00
+      required:
+      - code
+      - msg
+      - timestamp
     Response Certificate DTO:
       type: object
       description: Certificate response data transfer object containing generated
@@ -3519,12 +4064,12 @@ components:
           type: string
           format: date-time
           description: Start date of certificate validity period (ISO 8601 format)
-          example: 2025-03-18T17:54:38.021
+          example: 2025-03-18T17:54:38+08:00
         notAfter:
           type: string
           format: date-time
           description: End date of certificate validity period (ISO 8601 format)
-          example: 2025-04-17T17:54:38.021
+          example: 2025-04-17T17:54:38+08:00
         comment:
           type: string
           description: Optional description or notes about the certificate
@@ -3538,7 +4083,9 @@ components:
       - notBefore
       - privkey
       - uuid
-    ResultVOResponse Certificate DTO:
+    JsonNode:
+      type: object
+    NullResult:
       type: object
       properties:
         code:
@@ -3564,7 +4111,7 @@ components:
           description: Return message
           example: Success
         data:
-          $ref: "#/components/schemas/Response Certificate DTO"
+          type: object
           description: Data
         timestamp:
           type: string
@@ -3651,6 +4198,14 @@ components:
       - province
     SubjectAltName:
       type: object
+      description: Subject Alternative Name
+      example:
+      - type: DNS_NAME
+        value: a.b.c
+      - type: IP_ADDRESS
+        value: 10.18.0.1
+      - type: URI
+        value: https://a.b.c
       properties:
         type:
           type: string
@@ -3943,42 +4498,6 @@ components:
       - code
       - msg
       - timestamp
-    ResultVOVoid:
-      type: object
-      properties:
-        code:
-          type: integer
-          format: int32
-          description: Message code
-          examples:
-          - "200"
-          - "204"
-          - "302"
-          - "400"
-          - "401"
-          - "403"
-          - "404"
-          - "405"
-          - "417"
-          - "422"
-          - "444"
-          - "500"
-          - "501"
-        msg:
-          type: string
-          description: Return message
-          example: Success
-        data:
-          type: object
-          description: Data
-        timestamp:
-          type: string
-          description: Timestamp
-          example: 2025-03-19T01:38:31+08:00
-      required:
-      - code
-      - msg
-      - timestamp
     Create User DTO:
       type: object
       description: Data transfer object for user creation and updates
@@ -4125,12 +4644,12 @@ components:
           type: string
           format: date-time
           description: Start date of CA validity period (ISO 8601 format)
-          example: 2025-03-23T12:49:45.733
+          example: 2025-03-23T12:49:45+08:00
         notAfter:
           type: string
           format: date-time
           description: End date of CA validity period (ISO 8601 format)
-          example: 2025-09-19T12:49:45.733
+          example: 2025-09-19T12:49:45.733+08:00
         comment:
           type: string
           description: Optional description or notes about the CA
@@ -4139,6 +4658,8 @@ components:
       - algorithm
       - cert
       - keySize
+      - notAfter
+      - notBefore
       - privkey
       - uuid
     ResultVOResponse CA DTO:
@@ -4289,6 +4810,62 @@ components:
       - code
       - msg
       - timestamp
+    NullPageResult:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          description: Message code
+          examples:
+          - "200"
+          - "204"
+          - "302"
+          - "400"
+          - "401"
+          - "403"
+          - "404"
+          - "405"
+          - "417"
+          - "422"
+          - "444"
+          - "500"
+          - "501"
+        msg:
+          type: string
+          description: Return message
+          example: Success
+        data:
+          type: T
+          $ref: "#/components/schemas/PageDTOVoid"
+          description: Data
+        timestamp:
+          type: string
+          description: Timestamp
+          example: 2025-03-19T01:38:31+08:00
+      required:
+      - code
+      - msg
+      - timestamp
+    PageDTOVoid:
+      type: object
+      description: Data
+      properties:
+        total:
+          type: integer
+          format: int64
+          description: Total
+          examples:
+          - "100"
+        list:
+          type: array
+          description: Current Page Data List
+          items:
+            type: object
+            description: Current Page Data List
+      required:
+      - list
+      - total
     Login Record DTO:
       type: object
       description: Login Record DTO
@@ -4333,19 +4910,31 @@ components:
           type: string
           format: date-time
           description: Login time
-          example: 2025-04-05 20:34:00
+          example: 2025-04-05T20:34:00+08:00
         isOnline:
           type: boolean
           description: Online status
           example: true
         isCurrentSession:
           type: boolean
-          description: Current session status
+          description: This session is current session
           example: false
       required:
+      - browser
+      - city
+      - ipAddress
+      - isCurrentSession
+      - isOnline
+      - loginTime
+      - os
+      - platform
+      - province
+      - region
+      - username
       - uuid
     PageDTOLogin Record DTO:
       type: object
+      description: Data
       properties:
         total:
           type: integer
@@ -4355,9 +4944,11 @@ components:
           - "100"
         list:
           type: array
+          description: Current Page Data List
           items:
             $ref: "#/components/schemas/Login Record DTO"
       required:
+      - list
       - total
     ResultVOPageDTOLogin Record DTO:
       type: object
@@ -4459,6 +5050,7 @@ components:
       - uuid
     PageDTOCertificate Info DTO:
       type: object
+      description: Data
       properties:
         total:
           type: integer
@@ -4468,9 +5060,11 @@ components:
           - "100"
         list:
           type: array
+          description: Current Page Data List
           items:
             $ref: "#/components/schemas/Certificate Info DTO"
       required:
+      - list
       - total
     ResultVOPageDTOCertificate Info DTO:
       type: object
@@ -4579,7 +5173,7 @@ components:
           description: Optional description or notes about the CA
           example: Cert Vault Default Intermediate Certificate Authority
         available:
-          type: boolean
+          type: string
           description: Indicates if the CA is currently active
           example: true
         notBefore:
@@ -4615,6 +5209,7 @@ components:
       - uuid
     PageDTOCA Information DTO:
       type: object
+      description: Data
       properties:
         total:
           type: integer
@@ -4624,9 +5219,11 @@ components:
           - "100"
         list:
           type: array
+          description: Current Page Data List
           items:
             $ref: "#/components/schemas/CA Information DTO"
       required:
+      - list
       - total
     ResultVOPageDTOCA Information DTO:
       type: object
@@ -4664,8 +5261,104 @@ components:
       - code
       - msg
       - timestamp
+    OIDC Provider DTO:
+      type: object
+      description: OpenID Connect Provider DTO
+      properties:
+        provider:
+          type: string
+          description: OpenID Connect Provider
+          example: oidc
+        displayName:
+          type: string
+          description: OpenID Connect Display Name
+          example: OpenID Connect
+        logo:
+          type: string
+          description: OpenID Connect Logo (BASE64 Encoded)
+          example: "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjwhRE9DVFlQRSBzdmcgIFBVQkxJQyAnLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4nICAnaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkJz48c3ZnIGhlaWdodD0iNTEycHgiIHN0eWxlPSJlbmFibGUtYmFja2dyb3VuZDpuZXcgMCAwIDUxMiA1MTI7IiB2ZXJzaW9uPSIxLjEiIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiB3aWR0aD0iNTEycHgiIHhtbDpzcGFjZT0icHJlc2VydmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPjxnIGlkPSJfeDMyXzM5LW9wZW5pZCI+PGc+PHBhdGggZD0iTTIzNC44NDksNDE5djYuNjIzYy03OS4yNjgtOS45NTgtMTM5LjMzNC01My4zOTMtMTM5LjMzNC0xMDUuNzU3ICAgIGMwLTM5LjMxMywzMy44NzMtNzMuNTk1LDg0LjQ4NS05Mi41MTFMMTc4LjAyMywxODBDODguODkyLDIwMi40OTcsMjYuMDAxLDI1Ni42MDcsMjYuMDAxLDMxOS44NjYgICAgYzAsNzYuMjg4LDkwLjg3MSwxMzkuMTI4LDIwOC45NSwxNDkuNzA1bDAuMDE4LTAuMDA5VjQxOUgyMzQuODQ5eiIgc3R5bGU9ImZpbGw6I0IyQjJCMjsiLz48cG9seWdvbiBwb2ludHM9IjMwNC43NzIsNDM2LjcxMyAzMDQuNjcsNDM2LjcxMyAzMDQuNjcsMjIxLjY2NyAzMDQuNjcsMjEzLjY2NyAzMDQuNjcsNDIuNDI5ICAgICAyMzQuODQ5LDc4LjI1IDIzNC44NDksMjIxLjY2NyAyMzQuOTY5LDIyMS42NjcgMjM0Ljk2OSw0NjkuNTYzICAgIiBzdHlsZT0iZmlsbDojRjc5MzFFOyIvPjxwYXRoIGQ9Ik00ODUuOTk5LDI5MS45MzhsLTkuNDQ2LTEwMC4xMTRsLTM1LjkzOCwyMC4zMzFDNDE1LjA4NywxOTYuNjQ5LDM4Mi41LDE3Ny41LDM0MCwxNzcuMjYxICAgIGwwLjAwMiwzNi40MDZ2Ny40OThjMy41MDIsMC45NjgsNi45MjMsMi4wMjQsMTAuMzAxLDMuMTI1YzE0LjE0NSw0LjYxMSwyNy4xNzYsMTAuMzUyLDM4LjY2NiwxNy4xMjhsLTM3Ljc4NiwyMS4yNTQgICAgTDQ4NS45OTksMjkxLjkzOHoiIHN0eWxlPSJmaWxsOiNCMkIyQjI7Ii8+PC9nPjwvZz48ZyBpZD0iTGF5ZXJfMSIvPjwvc3ZnPg=="
+      required:
+      - displayName
+      - logo
+      - provider
+    OidcProviderListResult:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          description: Message code
+          examples:
+          - "200"
+          - "204"
+          - "302"
+          - "400"
+          - "401"
+          - "403"
+          - "404"
+          - "405"
+          - "417"
+          - "422"
+          - "444"
+          - "500"
+          - "501"
+        msg:
+          type: string
+          description: Return message
+          example: Success
+        data:
+          type: array
+          description: Data
+          items:
+            $ref: "#/components/schemas/OIDC Provider DTO"
+        timestamp:
+          type: string
+          description: Timestamp
+          example: 2025-03-19T01:38:31+08:00
+      required:
+      - code
+      - msg
+      - timestamp
+    UserProfileResult:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          description: Message code
+          examples:
+          - "200"
+          - "204"
+          - "302"
+          - "400"
+          - "401"
+          - "403"
+          - "404"
+          - "405"
+          - "417"
+          - "422"
+          - "444"
+          - "500"
+          - "501"
+        msg:
+          type: string
+          description: Return message
+          example: Success
+        data:
+          type: T
+          $ref: "#/components/schemas/User Profile DTO"
+          description: Data
+        timestamp:
+          type: string
+          description: Timestamp
+          example: 2025-03-19T01:38:31+08:00
+      required:
+      - code
+      - msg
+      - timestamp
     PageDTOUser Profile DTO:
       type: object
+      description: Data
       properties:
         total:
           type: integer
@@ -4675,9 +5368,11 @@ components:
           - "100"
         list:
           type: array
+          description: Current Page Data List
           items:
             $ref: "#/components/schemas/User Profile DTO"
       required:
+      - list
       - total
     ResultVOPageDTOUser Profile DTO:
       type: object
