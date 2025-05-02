@@ -9,11 +9,11 @@ info:
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0
-  version: 2.3.4
+  version: 2.3.5
   summary: CertVault RESTful API Doc
   x-logo:
-    url: https://raw.githubusercontent.com/gregPerlinLi/CertVault/refs/heads/main/docs/img/Logo.svg
     altText: CertVault Logo
+    url: https://raw.githubusercontent.com/gregPerlinLi/CertVault/refs/heads/main/docs/img/Logo.svg
 servers:
 - url: http://localhost:1888
   description: Generated server url
@@ -4586,6 +4586,10 @@ components:
           format: int32
           description: "Role of the user (1: User, 2: Admin, 3: Superadmin)"
           example: 2
+        isPasswordInitialized:
+          type: boolean
+          description: Whether the user has initialized their password
+          example: true
       required:
       - displayName
       - email
