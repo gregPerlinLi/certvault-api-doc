@@ -9,7 +9,7 @@ info:
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0
-  version: 2.8.4
+  version: 2.9.0
   summary: CertVault RESTful API Doc
   x-logo:
     altText: CertVault Logo
@@ -3997,8 +3997,7 @@ components:
       type: object
       properties:
         code:
-          type: integer
-          format: int32
+          type: string
           description: Message code
           examples:
           - "200"
@@ -4019,7 +4018,7 @@ components:
           description: Return message
           example: Success
         data:
-          $ref: "#/components/schemas/Response Certificate DTO"
+          type: string
           description: Data
         timestamp:
           type: string
@@ -4029,66 +4028,12 @@ components:
       - code
       - msg
       - timestamp
-    Response Certificate DTO:
-      type: object
-      description: Certificate response data transfer object containing generated
-        certificate and private key details
-      properties:
-        uuid:
-          type: string
-          description: Unique identifier for the certificate
-          example: 9777b56b-90c3-4315-91c6-79ea658b0d9a
-        algorithm:
-          type: string
-          description: Algorithm used for generating the certificate
-          example: RSA
-        keySize:
-          type: integer
-          format: int32
-          description: Size of the key in bits
-          example: 2048
-        privkey:
-          type: string
-          description: Private key with BASE64 encoding
-          example: LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JSUV2Z0lCQU...
-        cert:
-          type: string
-          description: Certificate with BASE64 encoding
-          example: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUV2Z0lCQU...
-        caUuid:
-          type: string
-          description: CA UUID
-          example: 3885be11-4084-4538-9fa0-70ffe4c4cbe0
-        notBefore:
-          type: string
-          format: date-time
-          description: Start date of certificate validity period (ISO 8601 format)
-          example: 2025-03-18T17:54:38+08:00
-        notAfter:
-          type: string
-          format: date-time
-          description: End date of certificate validity period (ISO 8601 format)
-          example: 2025-04-17T17:54:38+08:00
-        comment:
-          type: string
-          description: Optional description or notes about the certificate
-          example: CertVault SSL Certificate
-      required:
-      - algorithm
-      - caUuid
-      - cert
-      - keySize
-      - notAfter
-      - notBefore
-      - privkey
-      - uuid
     JsonNode: {}
     NullResult:
       type: object
       properties:
         code:
-          type: integer
-          format: int32
+          type: string
           description: Message code
           examples:
           - "200"
@@ -4109,6 +4054,7 @@ components:
           description: Return message
           example: Success
         data:
+          type: string
           description: Data
         timestamp:
           type: string
@@ -4128,7 +4074,7 @@ components:
           description: CA UUID
           example: 3885be11-4084-4538-9fa0-70ffe4c4cbe0
         allowSubCa:
-          type: boolean
+          type: string
           description: Whether to allow sub-CA
           example: true
         algorithm:
@@ -4136,8 +4082,7 @@ components:
           description: "Algorithm (Can be RSA, EC, Ed25519)"
           example: RSA
         keySize:
-          type: integer
-          format: int32
+          type: string
           description: Key Size
           example: 2048
         country:
@@ -4165,12 +4110,11 @@ components:
           description: Common Name
           example: a.b.c
         expiry:
-          type: integer
-          format: int32
+          type: string
           description: Expiry (day)
           example: 30
         subjectAltNames:
-          type: array
+          type: string
           description: Subject Alternative Name
           example:
           - type: DNS_NAME
@@ -4179,8 +4123,6 @@ components:
             value: 10.18.0.1
           - type: URI
             value: https://a.b.c
-          items:
-            $ref: "#/components/schemas/SubjectAltName"
         comment:
           type: string
           description: Comment
@@ -4193,34 +4135,11 @@ components:
       - organization
       - organizationalUnit
       - province
-    SubjectAltName:
-      type: object
-      description: Subject Alternative Name
-      example:
-      - type: DNS_NAME
-        value: a.b.c
-      - type: IP_ADDRESS
-        value: 10.18.0.1
-      - type: URI
-        value: https://a.b.c
-      properties:
-        type:
-          type: string
-          enum:
-          - DNS_NAME
-          - IP_ADDRESS
-          - URI
-          - EMAIL
-          - DIRECTORY_NAME
-          - EDI_PARTY_NAME
-        value:
-          type: string
     ResultVOString:
       type: object
       properties:
         code:
-          type: integer
-          format: int32
+          type: string
           description: Message code
           examples:
           - "200"
@@ -4251,62 +4170,11 @@ components:
       - code
       - msg
       - timestamp
-    Private Key Details DTO:
-      type: object
-      description: Private Key details transfer object containing metadata and cryptographic
-        information
-      properties:
-        algorithm:
-          type: string
-          description: Algorithm of the private key
-          example: RSA
-        encoded:
-          type: string
-          description: Encoded of the private key
-          example: MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC1GAQWvotGCPu1QAB14hzKF5C2bc9WRecF...
-        format:
-          type: string
-          description: Format of the private key
-          example: PKCS#8
-        params:
-          description: Algorithm Parameter Spec of the private key
-        privkey:
-          $ref: "#/components/schemas/PrivkeySpecific"
-          description: Private Key Specific
-          example:
-            modulus: 228609759160589102334607729602696527515026450133506517096342257090026912981548985018...
-            prime:
-              p: 153760461261178965010117263539283481275456885011494138046055221948725869202108767925782429...
-              q: 148679158013366268620605192719915250915997392432944427360405967071016077019192990038738873...
-              exponentP: 15860059479768219531995555205846412460474061105599895832756050786172496083224060777549921...
-              exponentQ: 70091570654454189775275310653134894674773874858602789687155389453684372424508088869445904...
-            privateExponent: 3299540277858327843787562009722609295153325895010205143986299967674084211807790788851983...
-            publicExponent: "65537"
-            coefficient: 132134676487591500472106038450127896519064821839151815733859424292775374431869116103238791...
-      required:
-      - algorithm
-      - encoded
-      - format
-      - params
-      - privkey
-    PrivkeySpecific:
-      description: Private Key Specific
-      example:
-        modulus: 228609759160589102334607729602696527515026450133506517096342257090026912981548985018...
-        prime:
-          p: 153760461261178965010117263539283481275456885011494138046055221948725869202108767925782429...
-          q: 148679158013366268620605192719915250915997392432944427360405967071016077019192990038738873...
-          exponentP: 15860059479768219531995555205846412460474061105599895832756050786172496083224060777549921...
-          exponentQ: 70091570654454189775275310653134894674773874858602789687155389453684372424508088869445904...
-        privateExponent: 3299540277858327843787562009722609295153325895010205143986299967674084211807790788851983...
-        publicExponent: "65537"
-        coefficient: 132134676487591500472106038450127896519064821839151815733859424292775374431869116103238791...
     ResultVOPrivate Key Details DTO:
       type: object
       properties:
         code:
-          type: integer
-          format: int32
+          type: string
           description: Message code
           examples:
           - "200"
@@ -4327,7 +4195,7 @@ components:
           description: Return message
           example: Success
         data:
-          $ref: "#/components/schemas/Private Key Details DTO"
+          type: string
           description: Data
         timestamp:
           type: string
@@ -4355,8 +4223,7 @@ components:
       type: object
       properties:
         code:
-          type: integer
-          format: int32
+          type: string
           description: Message code
           examples:
           - "200"
@@ -4377,7 +4244,7 @@ components:
           description: Return message
           example: Success
         data:
-          $ref: "#/components/schemas/Certificate and Private Key DTO"
+          type: string
           description: Data
         timestamp:
           type: string
@@ -4387,82 +4254,11 @@ components:
       - code
       - msg
       - timestamp
-    Certificate Details DTO:
-      type: object
-      description: Certificate details transfer object containing metadata and cryptographic
-        information
-      example:
-        subject: "C=CN,ST=Guangdong,L=Canton,O=GregPerlinLi,OU=CertVault,CN=a.b.c,E=test@example.com"
-        issuer: "C=CN,ST=Guangdong,L=Canton,O=GregPerlinLi,OU=CertVault,CN=CertVault,E=test@example.com"
-        notBefore: 2025-03-16T17:47:31+08:00
-        notAfter: 2025-04-15T17:47:31+08:00
-        serialNumber: "270437134803127796822084897079779361349"
-        publicKey:
-          modulus: "27228785212927428737771860203521436191416421175100205454382431265594855967985632309468958148378247733975427437215287450921497030089159042637171587909338104950951468346622011497774866599914499772913232124067048957473507324932111466579075770019006239562097950887578380380351965073168545804309746900931657224661678530372714410855922734561728488370891868763766725189024112843185736499314827869994102612012859480648578770392684920448854880316939200542419448930131201774453139638113733093803960821686343047917906589960134274152756270862641854968301124244102646389827505217344218437902984794140086188049888289041283304310827"
-          publicExponent: "65537"
-          encoded: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA17GK+JlZg97kbB6ZnzUfe8pYBO5qScuo/zKGXe6RCBxcps6GrTsagc9BPCpCpfs0GirzAevxHqrK4doC0B3ZHePmXVinZp7f+6oNL93+1FFqkkT+JcSJQpnxR6dluhPfFtJbNErn1QNKdlYq+kwp/tmBWKOzYM0EdTpYd8qit6lXr9fHWU5C+qHIPxIdurOZBi+tRrBYF5bRusIM3C7bVgX1Lm8Dqvvbeelsdz18sgAgCFo41NiJWW1thqo3MhdLEfINhaOhkftYFuu12ajfAmMJgguJ8ADCCpGR22nlxtIsMvKXpzd/PCMhm83W1MWWRZr2RSAS0oYGD5AndEbIKwIDAQAB
-          format: X.509
-          algorithm: RSA
-          params: null
-        extensions:
-          "2.5.29.17": "SAN: DNS: a.b.c, IP: 10.18.0.1, Email: test@example.com, URI:\
-            \ https://a.b.c"
-          "2.5.29.15": "KeyUsage: Digital Signature, Key Encipherment"
-          "2.5.29.37": "EKU: org.bouncycastle.asn1.x509.ExtendedKeyUsage@7a9e2c00"
-      properties:
-        subject:
-          type: string
-          description: Subject of the certificate
-          example: "C=CN,ST=Guangdong,L=Canton,O=GregPerlinLi,OU=CertVault,CN=a.b.c,E=test@example.com"
-        issuer:
-          type: string
-          description: Issuer of the certificate
-          example: "C=CN,ST=Guangdong,L=Canton,O=GregPerlinLi,OU=CertVault,CN=CertVault,E=test@example.com"
-        notBefore:
-          type: string
-          format: date-time
-          description: Not Before of the certificate
-          example: 2025-03-16T17:47:31+08:00
-        notAfter:
-          type: string
-          format: date-time
-          description: Not After of the certificate
-          example: 2025-04-15T17:47:31+08:00
-        serialNumber:
-          type: string
-          description: Serial Number of the certificate
-          example: 270437134803127796822084897079779361349
-        publicKey:
-          type: object
-          description: Public Key of the certificate
-          properties:
-            encoded:
-              type: string
-              format: byte
-            format:
-              type: string
-            algorithm:
-              type: string
-        extensions:
-          type: object
-          additionalProperties:
-            type: string
-            description: Extensions of the certificate
-          description: Extensions of the certificate
-      required:
-      - extensions
-      - issuer
-      - notAfter
-      - notBefore
-      - publicKey
-      - serialNumber
-      - subject
     ResultVOCertificate Details DTO:
       type: object
       properties:
         code:
-          type: integer
-          format: int32
+          type: string
           description: Message code
           examples:
           - "200"
@@ -4483,7 +4279,7 @@ components:
           description: Return message
           example: Success
         data:
-          $ref: "#/components/schemas/Certificate Details DTO"
+          type: string
           description: Data
         timestamp:
           type: string
@@ -4514,8 +4310,7 @@ components:
           description: Password of the user
           example: 1234567890
         role:
-          type: integer
-          format: int32
+          type: string
           description: "Role of the user (1: User, 2: Admin, 3: Superadmin)"
           example: 2
       required:
@@ -4528,8 +4323,7 @@ components:
       type: object
       properties:
         code:
-          type: integer
-          format: int32
+          type: string
           description: Message code
           examples:
           - "200"
@@ -4550,7 +4344,7 @@ components:
           description: Return message
           example: Success
         data:
-          $ref: "#/components/schemas/User Profile DTO"
+          type: string
           description: Data
         timestamp:
           type: string
@@ -4560,36 +4354,6 @@ components:
       - code
       - msg
       - timestamp
-    User Profile DTO:
-      type: object
-      description: User profile information transfer object containing account details
-      properties:
-        username:
-          type: string
-          description: Username of the user
-          example: john.doe
-        displayName:
-          type: string
-          description: Display name of the user
-          example: John Doe
-        email:
-          type: string
-          description: Email of the user
-          example: john.doe@example.com
-        role:
-          type: integer
-          format: int32
-          description: "Role of the user (1: User, 2: Admin, 3: Superadmin)"
-          example: 2
-        isPasswordInitialized:
-          type: boolean
-          description: Whether the user has initialized their password
-          example: true
-      required:
-      - displayName
-      - email
-      - role
-      - username
     Login DTO:
       type: object
       description: Data transfer object for user authentication
@@ -4605,68 +4369,11 @@ components:
       required:
       - password
       - username
-    Response CA DTO:
-      type: object
-      description: Certificate Authority (CA) response data transfer object containing
-        generated certificate and private key details
-      properties:
-        uuid:
-          type: string
-          description: Unique identifier for the CA certificate
-          example: bf35ecb1-9b67-4083-9476-e264ba153188
-        algorithm:
-          type: string
-          description: Algorithm used to generate the CA certificate
-          example: RSA
-        keySize:
-          type: integer
-          format: int32
-          description: Size of the key in bits
-          example: 2048
-        privkey:
-          type: string
-          description: Private key with BASE64 encoding
-          example: LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JSUV2QUl...
-        cert:
-          type: string
-          description: Certificate with BASE64 encoding
-          example: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUV2QUl...
-        parentCa:
-          type: string
-          description: Parent CA UUID
-          example: 3885be11-4084-4538-9fa0-70ffe4c4cbe0
-        allowSubCa:
-          type: boolean
-          description: Whether to allow issue subordinate CA
-          example: true
-        notBefore:
-          type: string
-          format: date-time
-          description: Start date of CA validity period (ISO 8601 format)
-          example: 2025-03-23T12:49:45+08:00
-        notAfter:
-          type: string
-          format: date-time
-          description: End date of CA validity period (ISO 8601 format)
-          example: 2025-09-19T12:49:45.733+08:00
-        comment:
-          type: string
-          description: Optional description or notes about the CA
-          example: Cert Vault Default Intermediate Certificate Authority
-      required:
-      - algorithm
-      - cert
-      - keySize
-      - notAfter
-      - notBefore
-      - privkey
-      - uuid
     ResultVOResponse CA DTO:
       type: object
       properties:
         code:
-          type: integer
-          format: int32
+          type: string
           description: Message code
           examples:
           - "200"
@@ -4687,7 +4394,7 @@ components:
           description: Return message
           example: Success
         data:
-          $ref: "#/components/schemas/Response CA DTO"
+          type: string
           description: Data
         timestamp:
           type: string
@@ -4766,8 +4473,7 @@ components:
           description: Username of the user whose role information needs to be updated
           example: john.doe
         role:
-          type: integer
-          format: int32
+          type: string
           description: "Role of the user (1: User, 2: Admin, 3: Superadmin)"
           example: 2
       required:
@@ -4777,8 +4483,7 @@ components:
       type: object
       properties:
         code:
-          type: integer
-          format: int32
+          type: string
           description: Message code
           examples:
           - "200"
@@ -4799,7 +4504,7 @@ components:
           description: Return message
           example: Success
         data:
-          type: boolean
+          type: string
           description: Data
         timestamp:
           type: string
@@ -4813,8 +4518,7 @@ components:
       type: object
       properties:
         code:
-          type: integer
-          format: int32
+          type: string
           description: Message code
           examples:
           - "200"
@@ -4835,7 +4539,7 @@ components:
           description: Return message
           example: Success
         data:
-          $ref: "#/components/schemas/PageDTOVoid"
+          type: string
           description: Data
         timestamp:
           type: string
@@ -4845,114 +4549,11 @@ components:
       - code
       - msg
       - timestamp
-    PageDTOVoid:
-      type: object
-      description: Data
-      properties:
-        total:
-          type: integer
-          format: int64
-          description: Total
-          examples:
-          - "100"
-        list:
-          type: array
-          description: Current Page Data List
-          items:
-            description: Current Page Data List
-      required:
-      - list
-      - total
-    Login Record DTO:
-      type: object
-      description: Login Record DTO
-      properties:
-        uuid:
-          type: string
-          description: Session UUID
-          example: 1234567890
-        username:
-          type: string
-          description: Username
-          example: gregPerlinLi
-        ipAddress:
-          type: string
-          description: IP address
-          example: 10.18.0.1
-        region:
-          type: string
-          description: Region
-          example: China
-        province:
-          type: string
-          description: Province
-          example: Guangdong
-        city:
-          type: string
-          description: City
-          example: Canton
-        browser:
-          type: string
-          description: Browser
-          example: Chrome
-        os:
-          type: string
-          description: Operating system
-          example: Windows 10
-        platform:
-          type: string
-          description: Platform
-          example: Windows
-        loginTime:
-          type: string
-          format: date-time
-          description: Login time
-          example: 2025-04-05T20:34:00+08:00
-        isOnline:
-          type: boolean
-          description: Online status
-          example: true
-        isCurrentSession:
-          type: boolean
-          description: This session is current session
-          example: false
-      required:
-      - browser
-      - city
-      - ipAddress
-      - isCurrentSession
-      - isOnline
-      - loginTime
-      - os
-      - platform
-      - province
-      - region
-      - username
-      - uuid
-    PageDTOLogin Record DTO:
-      type: object
-      description: Data
-      properties:
-        total:
-          type: integer
-          format: int64
-          description: Total
-          examples:
-          - "100"
-        list:
-          type: array
-          description: Current Page Data List
-          items:
-            $ref: "#/components/schemas/Login Record DTO"
-      required:
-      - list
-      - total
     ResultVOPageDTOLogin Record DTO:
       type: object
       properties:
         code:
-          type: integer
-          format: int32
+          type: string
           description: Message code
           examples:
           - "200"
@@ -4973,7 +4574,7 @@ components:
           description: Return message
           example: Success
         data:
-          $ref: "#/components/schemas/PageDTOLogin Record DTO"
+          type: string
           description: Data
         timestamp:
           type: string
@@ -4983,92 +4584,11 @@ components:
       - code
       - msg
       - timestamp
-    Certificate Info DTO:
-      type: object
-      description: Certificate information transfer object containing metadata and
-        lifecycle details
-      properties:
-        uuid:
-          type: string
-          description: Unique identifier for the certificate
-          example: 72267ce5-e94a-4cdb-b35b-63f1f385b253
-        caUuid:
-          type: string
-          description: Unique identifier for the Certificate Authority that issued
-            the certificate
-          example: 3885be11-4084-4538-9fa0-70ffe4c4cbe0
-        algorithm:
-          type: string
-          description: Algorithm used to generate the certificate
-          example: RSA
-        keySize:
-          type: integer
-          format: int32
-          description: Size of the key in bits
-          example: 2048
-        owner:
-          type: string
-          description: Username of the certificate owner
-          example: gregPerlinLi
-        comment:
-          type: string
-          description: Optional description or notes about the certificate
-          example: Cert Vault SSL Certificate
-        notBefore:
-          type: string
-          format: date-time
-          description: Start date of the certificate's validity period (ISO 8601 format)
-          example: 2025-03-19T01:38:31+08:00
-        notAfter:
-          type: string
-          format: date-time
-          description: End date of the certificate's validity period (ISO 8601 format)
-          example: 2025-06-17T01:38:31+08:00
-        createdAt:
-          type: string
-          format: date-time
-          description: Date when the certificate was created (ISO 8601 format)
-          example: 2025-03-19T01:38:31+08:00
-        modifiedAt:
-          type: string
-          format: date-time
-          description: Date when the certificate was last modified (ISO 8601 format)
-          example: 2025-03-19T01:38:31+08:00
-      required:
-      - algorithm
-      - caUuid
-      - comment
-      - createdAt
-      - keySize
-      - modifiedAt
-      - notAfter
-      - notBefore
-      - owner
-      - uuid
-    PageDTOCertificate Info DTO:
-      type: object
-      description: Data
-      properties:
-        total:
-          type: integer
-          format: int64
-          description: Total
-          examples:
-          - "100"
-        list:
-          type: array
-          description: Current Page Data List
-          items:
-            $ref: "#/components/schemas/Certificate Info DTO"
-      required:
-      - list
-      - total
     ResultVOPageDTOCertificate Info DTO:
       type: object
       properties:
         code:
-          type: integer
-          format: int32
+          type: string
           description: Message code
           examples:
           - "200"
@@ -5089,7 +4609,7 @@ components:
           description: Return message
           example: Success
         data:
-          $ref: "#/components/schemas/PageDTOCertificate Info DTO"
+          type: string
           description: Data
         timestamp:
           type: string
@@ -5103,8 +4623,7 @@ components:
       type: object
       properties:
         code:
-          type: integer
-          format: int32
+          type: string
           description: Message code
           examples:
           - "200"
@@ -5125,8 +4644,7 @@ components:
           description: Return message
           example: Success
         data:
-          type: integer
-          format: int64
+          type: string
           description: Data
         timestamp:
           type: string
@@ -5136,98 +4654,11 @@ components:
       - code
       - msg
       - timestamp
-    CA Information DTO:
-      type: object
-      description: Certificate Authority information transfer object
-      properties:
-        uuid:
-          type: string
-          description: Unique identifier of the Certificate Authority
-          example: 3885be11-4084-4538-9fa0-70ffe4c4cbe0
-        algorithm:
-          type: string
-          description: Algorithm used for generating the CA certificate
-          example: RSA
-        keySize:
-          type: integer
-          format: int32
-          description: Size of the key in bits
-          example: 2048
-        owner:
-          type: string
-          description: Username of the CA owner
-          example: gregPerlinLi
-        parentCa:
-          type: string
-          description: UUID of the parent Certificate Authority (if any)
-          example: 3885be11-4084-4538-9fa0-70ffe4c4cbe0
-        allowSubCa:
-          type: boolean
-          description: Whether sub CAs can be created under this CA
-          example: true
-        comment:
-          type: string
-          description: Optional description or notes about the CA
-          example: Cert Vault Default Intermediate Certificate Authority
-        available:
-          type: string
-          description: Indicates if the CA is currently active
-          example: true
-        notBefore:
-          type: string
-          format: date-time
-          description: Start date of CA validity period (ISO 8601 format)
-          example: 2025-03-23T10:14:45+08:00
-        notAfter:
-          type: string
-          format: date-time
-          description: End date of CA validity period (ISO 8601 format)
-          example: 2035-03-21T10:14:45+08:00
-        createdAt:
-          type: string
-          format: date-time
-          description: Date when the CA was created (ISO 8601 format)
-          example: 2025-03-18T11:10:14+08:00
-        modifiedAt:
-          type: string
-          format: date-time
-          description: Date when the CA was last modified (ISO 8601 format)
-          example: 2025-03-23T10:14:45+08:00
-      required:
-      - algorithm
-      - available
-      - comment
-      - createdAt
-      - keySize
-      - modifiedAt
-      - notAfter
-      - notBefore
-      - owner
-      - uuid
-    PageDTOCA Information DTO:
-      type: object
-      description: Data
-      properties:
-        total:
-          type: integer
-          format: int64
-          description: Total
-          examples:
-          - "100"
-        list:
-          type: array
-          description: Current Page Data List
-          items:
-            $ref: "#/components/schemas/CA Information DTO"
-      required:
-      - list
-      - total
     ResultVOPageDTOCA Information DTO:
       type: object
       properties:
         code:
-          type: integer
-          format: int32
+          type: string
           description: Message code
           examples:
           - "200"
@@ -5248,7 +4679,7 @@ components:
           description: Return message
           example: Success
         data:
-          $ref: "#/components/schemas/PageDTOCA Information DTO"
+          type: string
           description: Data
         timestamp:
           type: string
@@ -5258,32 +4689,11 @@ components:
       - code
       - msg
       - timestamp
-    OIDC Provider DTO:
-      type: object
-      description: OpenID Connect Provider DTO
-      properties:
-        provider:
-          type: string
-          description: OpenID Connect Provider
-          example: oidc
-        displayName:
-          type: string
-          description: OpenID Connect Display Name
-          example: OpenID Connect
-        logo:
-          type: string
-          description: OpenID Connect Logo (BASE64 Encoded)
-          example: "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjwhRE9DVFlQRSBzdmcgIFBVQkxJQyAnLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4nICAnaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkJz48c3ZnIGhlaWdodD0iNTEycHgiIHN0eWxlPSJlbmFibGUtYmFja2dyb3VuZDpuZXcgMCAwIDUxMiA1MTI7IiB2ZXJzaW9uPSIxLjEiIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiB3aWR0aD0iNTEycHgiIHhtbDpzcGFjZT0icHJlc2VydmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPjxnIGlkPSJfeDMyXzM5LW9wZW5pZCI+PGc+PHBhdGggZD0iTTIzNC44NDksNDE5djYuNjIzYy03OS4yNjgtOS45NTgtMTM5LjMzNC01My4zOTMtMTM5LjMzNC0xMDUuNzU3ICAgIGMwLTM5LjMxMywzMy44NzMtNzMuNTk1LDg0LjQ4NS05Mi41MTFMMTc4LjAyMywxODBDODguODkyLDIwMi40OTcsMjYuMDAxLDI1Ni42MDcsMjYuMDAxLDMxOS44NjYgICAgYzAsNzYuMjg4LDkwLjg3MSwxMzkuMTI4LDIwOC45NSwxNDkuNzA1bDAuMDE4LTAuMDA5VjQxOUgyMzQuODQ5eiIgc3R5bGU9ImZpbGw6I0IyQjJCMjsiLz48cG9seWdvbiBwb2ludHM9IjMwNC43NzIsNDM2LjcxMyAzMDQuNjcsNDM2LjcxMyAzMDQuNjcsMjIxLjY2NyAzMDQuNjcsMjEzLjY2NyAzMDQuNjcsNDIuNDI5ICAgICAyMzQuODQ5LDc4LjI1IDIzNC44NDksMjIxLjY2NyAyMzQuOTY5LDIyMS42NjcgMjM0Ljk2OSw0NjkuNTYzICAgIiBzdHlsZT0iZmlsbDojRjc5MzFFOyIvPjxwYXRoIGQ9Ik00ODUuOTk5LDI5MS45MzhsLTkuNDQ2LTEwMC4xMTRsLTM1LjkzOCwyMC4zMzFDNDE1LjA4NywxOTYuNjQ5LDM4Mi41LDE3Ny41LDM0MCwxNzcuMjYxICAgIGwwLjAwMiwzNi40MDZ2Ny40OThjMy41MDIsMC45NjgsNi45MjMsMi4wMjQsMTAuMzAxLDMuMTI1YzE0LjE0NSw0LjYxMSwyNy4xNzYsMTAuMzUyLDM4LjY2NiwxNy4xMjhsLTM3Ljc4NiwyMS4yNTQgICAgTDQ4NS45OTksMjkxLjkzOHoiIHN0eWxlPSJmaWxsOiNCMkIyQjI7Ii8+PC9nPjwvZz48ZyBpZD0iTGF5ZXJfMSIvPjwvc3ZnPg=="
-      required:
-      - displayName
-      - logo
-      - provider
     OidcProviderListResult:
       type: object
       properties:
         code:
-          type: integer
-          format: int32
+          type: string
           description: Message code
           examples:
           - "200"
@@ -5304,10 +4714,8 @@ components:
           description: Return message
           example: Success
         data:
-          type: array
+          type: string
           description: Data
-          items:
-            $ref: "#/components/schemas/OIDC Provider DTO"
         timestamp:
           type: string
           description: Timestamp
@@ -5320,8 +4728,7 @@ components:
       type: object
       properties:
         code:
-          type: integer
-          format: int32
+          type: string
           description: Message code
           examples:
           - "200"
@@ -5342,7 +4749,7 @@ components:
           description: Return message
           example: Success
         data:
-          $ref: "#/components/schemas/User Profile DTO"
+          type: string
           description: Data
         timestamp:
           type: string
@@ -5352,30 +4759,11 @@ components:
       - code
       - msg
       - timestamp
-    PageDTOUser Profile DTO:
-      type: object
-      description: Data
-      properties:
-        total:
-          type: integer
-          format: int64
-          description: Total
-          examples:
-          - "100"
-        list:
-          type: array
-          description: Current Page Data List
-          items:
-            $ref: "#/components/schemas/User Profile DTO"
-      required:
-      - list
-      - total
     ResultVOPageDTOUser Profile DTO:
       type: object
       properties:
         code:
-          type: integer
-          format: int32
+          type: string
           description: Message code
           examples:
           - "200"
@@ -5396,7 +4784,7 @@ components:
           description: Return message
           example: Success
         data:
-          $ref: "#/components/schemas/PageDTOUser Profile DTO"
+          type: string
           description: Data
         timestamp:
           type: string
