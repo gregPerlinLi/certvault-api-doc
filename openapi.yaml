@@ -12,8 +12,8 @@ info:
   version: 2.11.0
   summary: CertVault RESTful API Doc
   x-logo:
-    altText: CertVault Logo
     url: https://raw.githubusercontent.com/gregPerlinLi/CertVault/main/docs/img/Banner.svg
+    altText: CertVault Logo
 servers:
 - url: http://localhost:1888
   description: Generated server url
